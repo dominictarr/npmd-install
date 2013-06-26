@@ -1,0 +1,181 @@
+{
+  "name": "request",
+  "version": "2.21.0",
+  "dependencies": {
+    "qs": {
+      "name": "qs",
+      "version": "0.6.5",
+      "shasum": "294b268e4b0d4250f6dde19b3b8b34935dff14ef",
+      "from": "~0.6.0",
+      "dependencies": {}
+    },
+    "json-stringify-safe": {
+      "name": "json-stringify-safe",
+      "version": "4.0.0",
+      "shasum": "77c271aaea54302e68efeaccb56abbf06a9b1a54",
+      "from": "~4.0.0",
+      "dependencies": {}
+    },
+    "forever-agent": {
+      "name": "forever-agent",
+      "version": "0.5.0",
+      "dependencies": {},
+      "shasum": "0c1647a74f3af12d76a07a99490ade7c7249c8f0",
+      "from": "~0.5.0"
+    },
+    "tunnel-agent": {
+      "name": "tunnel-agent",
+      "version": "0.3.0",
+      "dependencies": {},
+      "shasum": "ad681b68f5321ad2827c4cfb1b7d5df2cfe942ee",
+      "from": "~0.3.0"
+    },
+    "http-signature": {
+      "name": "http-signature",
+      "version": "0.9.11",
+      "dependencies": {
+        "assert-plus": {
+          "name": "assert-plus",
+          "version": "0.1.2",
+          "dependencies": {},
+          "shasum": "d93ffdbb67ac5507779be316a7d65146417beef8",
+          "from": "0.1.2"
+        },
+        "asn1": {
+          "name": "asn1",
+          "version": "0.1.11",
+          "dependencies": {},
+          "shasum": "559be18376d08a4ec4dbe80877d27818639b2df7",
+          "from": "0.1.11"
+        },
+        "ctype": {
+          "name": "ctype",
+          "version": "0.5.2",
+          "shasum": "fe8091d468a373a0b0c9ff8bbfb3425c00973a1d",
+          "from": "0.5.2",
+          "dependencies": {}
+        }
+      },
+      "shasum": "9e882714572315e6790a5d0a7955efff1f19e653",
+      "from": "~0.9.11"
+    },
+    "hawk": {
+      "name": "hawk",
+      "version": "0.13.1",
+      "dependencies": {
+        "hoek": {
+          "name": "hoek",
+          "version": "0.8.5",
+          "dependencies": {},
+          "shasum": "1e9fd770ef7ebe0274adfcb5b0806a025a5e4e9f",
+          "from": "0.8.x"
+        },
+        "boom": {
+          "name": "boom",
+          "version": "0.4.2",
+          "dependencies": {
+            "hoek": {
+              "name": "hoek",
+              "version": "0.9.1",
+              "dependencies": {},
+              "shasum": "3d322462badf07716ea7eb85baf88079cddce505",
+              "from": "0.9.x"
+            }
+          },
+          "shasum": "7a636e9ded4efcefb19cef4947a3c67dfaee911b",
+          "from": "0.4.x"
+        },
+        "cryptiles": {
+          "name": "cryptiles",
+          "version": "0.2.1",
+          "dependencies": {},
+          "shasum": "07605ced2a0896c7b4907b8292378fa35d23dede",
+          "from": "0.2.x"
+        },
+        "sntp": {
+          "name": "sntp",
+          "version": "0.2.4",
+          "dependencies": {
+            "hoek": {
+              "name": "hoek",
+              "version": "0.9.1",
+              "dependencies": {},
+              "shasum": "3d322462badf07716ea7eb85baf88079cddce505",
+              "from": "0.9.x"
+            }
+          },
+          "shasum": "fb885f18b0f3aad189f824862536bceeec750900",
+          "from": "0.2.x"
+        }
+      },
+      "shasum": "3617958821f58311e4d7f6de291fca662b412ef4",
+      "from": "~0.13.0"
+    },
+    "aws-sign": {
+      "name": "aws-sign",
+      "version": "0.3.0",
+      "dependencies": {},
+      "shasum": "3d81ca69b474b1e16518728b51c24ff0bbedc6e9",
+      "from": "~0.3.0"
+    },
+    "oauth-sign": {
+      "name": "oauth-sign",
+      "version": "0.3.0",
+      "dependencies": {},
+      "shasum": "cb540f93bb2b22a7d5941691a288d60e8ea9386e",
+      "from": "~0.3.0"
+    },
+    "cookie-jar": {
+      "name": "cookie-jar",
+      "version": "0.3.0",
+      "dependencies": {},
+      "shasum": "bc9a27d4e2b97e186cd57c9e2063cb99fa68cccc",
+      "from": "~0.3.0"
+    },
+    "node-uuid": {
+      "name": "node-uuid",
+      "version": "1.4.0",
+      "shasum": "07f9b2337572ff6275c775e1d48513f3a45d7a65",
+      "from": "~1.4.0",
+      "dependencies": {}
+    },
+    "mime": {
+      "name": "mime",
+      "version": "1.2.9",
+      "dependencies": {},
+      "shasum": "009cd40867bd35de521b3b966f04e2f8d4d13d09",
+      "from": "~1.2.9"
+    },
+    "form-data": {
+      "name": "form-data",
+      "version": "0.0.8",
+      "dependencies": {
+        "combined-stream": {
+          "name": "combined-stream",
+          "version": "0.0.4",
+          "dependencies": {
+            "delayed-stream": {
+              "name": "delayed-stream",
+              "version": "0.0.5",
+              "dependencies": {},
+              "shasum": "d4b1f43a93e8296dfe02694f4680bc37a313c73f",
+              "from": "0.0.5"
+            }
+          },
+          "shasum": "2d1a43347dbe9515a4a2796732e5b88473840b22",
+          "from": "~0.0.4"
+        },
+        "async": {
+          "name": "async",
+          "version": "0.2.9",
+          "shasum": "df63060fbf3d33286a76aaf6d55a2986d9ff8619",
+          "from": "~0.2.7",
+          "dependencies": {}
+        }
+      },
+      "shasum": "0890cd1005c5ccecc0b9d24a88052c92442d0db5",
+      "from": "0.0.8"
+    }
+  },
+  "shasum": "5728ab9c45e5a87c99daccd530298b6673a868d7"
+}
