@@ -9,12 +9,12 @@
   },
   "dependencies": {
     "mkdirp": "~0.3.5",
-    "pull-tee": "~2.0.0",
-    "optimist": "~0.4.0",
-    "stream-to-pull-stream": "~1.2.2",
     "pull-traverse": "~1.0.0",
     "pull-stream": "~2.20.0",
-    "rimraf": "~2.2.0"
+    "rimraf": "~2.2.0",
+    "request": "2",
+    "tar": ">=0.1.17 <0.2",
+    "pull-stream": ">=2.20 <3"
   },
   "devDependencies": {},
   "scripts": {
