@@ -20,38 +20,24 @@ function getUrl (name, ver) {
   return registry +"/" + name + "/-/" + name + "-" + ver + ".tgz"
 }
 
-function toGithubDownload (repo) {
-  //git://github.com/substack/sockjs-client.git#browserify-npm
-  //https://github.com/isaacs/readable-stream/archive/master.tar.gz
-  if(/^http/.test(repo)) return repo
-
-  var m = /^git:\/\/(github.com\/[^#]+)(?:#(.*))?$/.exec(repo)
-
-  if(m) return 'https://' + m[1] + '/archive/' + m[2] + '.tar.gz'
-  return null
+function empty (obj) {
+  for(var i in obj)
+    return false
+  return true
 }
 
-function download (name, ver) {
-  var ds = pull.defer()
-  return ds
-}
-
-//function fromCache (name, ver) {
-//  var package = path.join(process.env.HOME, '.npm', name, ver, 'package.tgz')
-//  return pfs.read(package)
-//}
-
-var fromCache, extract, intsall
-
-var exports = install = module.exports =
+var preparePackage = exports.preparePackage =
 function (pkg, cb) {
-  if(!pkg.version) {
-    return process.nextTick(cb)
-  }
+//  if(/^(git|http)/.test(pkg.from))
+//    console.error('FROM', pkg.from)
+  if(!pkg.version)
+    return cb(new Error(pkg.name + ' has no version'))
+
   var name = pkg.name
   var ver  = pkg.version
   var cache = path.join(process.env.HOME, '.npm', name, ver, 'package.tgz')
   var tmp = path.join(os.tmpdir(), ''+Date.now() + Math.random())
+
   fs.stat(cache, function (err) {
 
     var createStream = !err
@@ -68,26 +54,30 @@ function (pkg, cb) {
     mkdirp(tmp, function (err) {
       if(err) return cb(err)
       createStream(function (err, stream) {
+        var i = 1
+        stream.on('error', next)
         stream.pipe(zlib.createGunzip())
         .pipe(tar.Extract({path: tmp}))
-        .on('end', function () {
-          cb(null, tmp)
-        })
+        .on('end', next)
+        function next (err) {
+          if(--i) return
+          cb(err, tmp)
+        }
       })
     })
 
   })
 }
 
-if(!module.parent) {
+var installTree = exports.installTree =
+function (tree, opts, cb) {
+  if(!cb)
+    cb = opts, opts = {}
 
-  ///*
-  var snapshot = require('./npmd-snapshot.json')
-  snapshot.path = path.join(process.cwd(), 'node_modules')
-  var i = 0
+  tree.path = path.join(opts.path || process.cwd(), 'node_modules')
 
   pull(
-    pt.widthFirst(snapshot, function (pkg) {
+    pt.widthFirst(tree, function (pkg) {
       return pull(
         pull.values(pkg.dependencies),
         pull.map(function (_pkg) {
@@ -96,35 +86,55 @@ if(!module.parent) {
         })
       )
     }),
-    pull.paraMap(function (pkg, cb) {
-      console.log(pkg.name + '@' + pkg.version, '->', pkg.path)
-      install(pkg, function (err, data) {
-        console.log('installed', err, pkg.name, i++)
+    //unpack every file, so that it can be moved into place.
+    //optimization: if a module has no deps,
+    //just link it.
+    pull.asyncMap(function (pkg, cb) {
+      preparePackage(pkg, function (err, data) {
         pkg.tmp = data
         cb(err, pkg)
       })
     }, 64),
     pull.asyncMap(function (pkg, cb) {
-      if(!pkg.tmp) {
-        console.log('NO PATH NO PATH', pkg.name)
-        return cb(new Error('no path'))
-      }
-      console.error(pkg.path)
+      if(!pkg.tmp)
+        return cb(new Error('no path for:'+ pkg.name))
+
       var source = path.join(pkg.tmp, 'package')
       var dest   = path.join(pkg.path, pkg.name)
       mkdirp(pkg.path, function () {
-        fs.stat(dest, function (err) {
-            if(!err) {
-              return cb()
-            }
-            fs.rename(source, dest, cb)
+        fs.lstat(dest, function (err) {
+          if(!err) return cb()
+          fs.rename(source, dest, function (err) {
+            console.error(pkg.name + '@' + pkg.version, '->', pkg.path)
+            cb(err)
           })
         })
+      })
     }),
-    pull.drain(null, function (err) {
-      if(err) throw err
-      console.log('DONE')
-    })
+    pull.drain(null, cb)
   )
 
 }
+
+exports = module.exports = installTree
+
+exports.commands = function (db, config) {
+  db.commands.install = function (config, cb) {
+    db.resolve(config._[0], {greedy: config.greedy}, function (err, tree) {
+      if(err) return cb(err)
+      installTree(tree, {path: config.installPath}, cb)
+    })
+  }
+}
+
+exports.db = function () {}
+
+if(!module.parent) {
+  var snapshot = require('./npmd-snapshot.json')
+  installTree(snapshot, function (err) {
+    if(err) throw err
+    console.log('done')
+  })
+}
+
+
