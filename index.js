@@ -1,18 +1,15 @@
-
-var request = require('request')
 var fs      = require('fs')
-var toPull  = require('stream-to-pull-stream')
 var path    = require('path')
-var mkdirp  = require('mkdirp')
-var pull    = require('pull-stream')
 var http    = require('http')
-var tar     = require('tar')
-var tee     = require('pull-tee')
 var zlib    = require('zlib')
 var os      = require('os')
+
+var request = require('request')
+var mkdirp  = require('mkdirp')
 var rimraf  = require('rimraf')
+var tar     = require('tar')
+var pull    = require('pull-stream')
 var pt      = require('pull-traverse')
-var through = require('through')
 
 var registry = 'http://registry.npmjs.org'
 
@@ -28,8 +25,6 @@ function empty (obj) {
 
 var preparePackage = exports.preparePackage =
 function (pkg, cb) {
-//  if(/^(git|http)/.test(pkg.from))
-//    console.error('FROM', pkg.from)
   if(!pkg.version)
     return cb(new Error(pkg.name + ' has no version'))
 
@@ -128,13 +123,4 @@ exports.commands = function (db, config) {
 }
 
 exports.db = function () {}
-
-if(!module.parent) {
-  var snapshot = require('./npmd-snapshot.json')
-  installTree(snapshot, function (err) {
-    if(err) throw err
-    console.log('done')
-  })
-}
-
 
