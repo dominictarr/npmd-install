@@ -1,0 +1,25 @@
+{
+  "name": "npmd-install",
+  "description": "install npm modules",
+  "version": "0.0.0",
+  "homepage": "https://github.com/dominictarr/npmd-install",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dominictarr/npmd-install.git"
+  },
+  "dependencies": {
+    "mkdirp": "~0.3.5",
+    "pull-tee": "~2.0.0",
+    "optimist": "~0.4.0",
+    "stream-to-pull-stream": "~1.2.2",
+    "pull-traverse": "~1.0.0",
+    "pull-stream": "~2.20.0",
+    "rimraf": "~2.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "set -e; for t in test/*.js; do node $t; done"
+  },
+  "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
+  "license": "MIT"
+}

@@ -1,0 +1,6 @@
+# npmd-install
+
+
+## License
+
+MIT

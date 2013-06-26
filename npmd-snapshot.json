@@ -1,0 +1,362 @@
+{
+  "name": "browserify",
+  "version": "2.20.0",
+  "dependencies": {
+    "module-deps": {
+      "name": "module-deps",
+      "version": "0.12.0",
+      "dependencies": {},
+      "shasum": "1fd2ce09a25d123d883fe90ef3cbafb9d4bd479e",
+      "from": "~0.12.0"
+    },
+    "through": {
+      "name": "through",
+      "version": "2.3.4",
+      "shasum": "495e40e8d8a8eaebc7c275ea88c2b8fc14c56455",
+      "from": "~2.3.4",
+      "dependencies": {}
+    },
+    "JSONStream": {
+      "name": "JSONStream",
+      "version": "0.6.4",
+      "dependencies": {
+        "through": {
+          "name": "through",
+          "version": "2.2.7",
+          "shasum": "6e8e21200191d4eb6a99f6f010df46aa1c6eb2bd",
+          "from": "~2.2.7",
+          "dependencies": {}
+        }
+      },
+      "shasum": "4b2c8063f8f512787b2375f7ee9db69208fa2dcb",
+      "from": "~0.6.4"
+    },
+    "jsonparse": {
+      "name": "jsonparse",
+      "version": "0.0.5",
+      "shasum": "330542ad3f0a654665b778f3eb2d9a9fa507ac64",
+      "dependencies": {}
+    },
+    "browser-resolve": {
+      "name": "browser-resolve",
+      "version": "1.0.1",
+      "main": "index.js",
+      "repository": {
+        "type": "git",
+        "url": "git://github.com/shtylman/node-browser-resolve.git"
+      },
+      "keywords": [
+        "resolve",
+        "browser"
+      ],
+      "author": "Roman Shtylman <shtylman@gmail.com>",
+      "license": "MIT",
+      "dependencies": {},
+      "shasum": "9a0ab32aebf8c2b6af8cd40b6bb5092f8264e6cd",
+      "from": "git://github.com/substack/node-browser-resolve.git#dir-replace"
+    },
+    "resolve": {
+      "name": "resolve",
+      "version": "0.4.0",
+      "shasum": "531d572fab054e12e89fd545ad65b2e49555c34c",
+      "dependencies": {}
+    },
+    "detective": {
+      "name": "detective",
+      "version": "2.1.2",
+      "dependencies": {},
+      "shasum": "d22ad9f18c82efb3f55fee2e244883da6bbb8e37"
+    },
+    "esprima": {
+      "name": "esprima",
+      "version": "1.0.2",
+      "shasum": "8039bf9ceac4d9d2c15f623264fb292b5502ceaf",
+      "dependencies": {}
+    },
+    "escodegen": {
+      "name": "escodegen",
+      "version": "0.0.15",
+      "dependencies": {},
+      "shasum": "ffda9cb26b70b34f7cc19f1d88756539afb543bd"
+    },
+    "source-map": {
+      "name": "source-map",
+      "version": "0.1.23",
+      "dependencies": {},
+      "shasum": "079f8fa7867f318b48cf5d4c716ab6d4dc859be9"
+    },
+    "amdefine": {
+      "name": "amdefine",
+      "version": "0.0.5",
+      "shasum": "86b6e9470f8cde955ef7daa3cf5d544ba81aa3db",
+      "dependencies": {}
+    },
+    "concat-stream": {
+      "name": "concat-stream",
+      "version": "1.0.0",
+      "shasum": "3a32498e2e255bf113bf18853c674aef58e7ea1b",
+      "from": "~1.0.0",
+      "dependencies": {}
+    },
+    "browser-pack": {
+      "name": "browser-pack",
+      "version": "0.9.2",
+      "dependencies": {
+        "JSONStream": {
+          "name": "JSONStream",
+          "version": "0.4.4",
+          "dependencies": {},
+          "shasum": "cc2cf119286c45be150423cbc128d480e9b54ae2",
+          "from": "~0.4.3"
+        },
+        "through": {
+          "name": "through",
+          "version": "2.2.7",
+          "shasum": "6e8e21200191d4eb6a99f6f010df46aa1c6eb2bd",
+          "from": "~2.2.0",
+          "dependencies": {}
+        }
+      },
+      "shasum": "943017c8b81875d94af4432443269bade2b31e24",
+      "from": "~0.9.2"
+    },
+    "duplexer": {
+      "name": "duplexer",
+      "version": "0.0.4",
+      "dependencies": {},
+      "shasum": "afcb7f1f8b8d74f820726171d5d64ac9e4a8ff20",
+      "from": "~0.0.2"
+    },
+    "combine-source-map": {
+      "name": "combine-source-map",
+      "version": "0.1.2",
+      "dependencies": {},
+      "shasum": "882fa1c374681089977ea050159422c4206f79ec"
+    },
+    "convert-source-map": {
+      "name": "convert-source-map",
+      "version": "0.2.5",
+      "dependencies": {},
+      "shasum": "bcbcb50f1fba6c9acd0e7c2b5e1bf168b1e41bd4"
+    },
+    "parse-base64vlq-mappings": {
+      "name": "parse-base64vlq-mappings",
+      "version": "0.1.3",
+      "dependencies": {},
+      "shasum": "5cc6ff0071c32582b7f2dec530e0c840cfde393d"
+    },
+    "inline-source-map": {
+      "name": "inline-source-map",
+      "version": "0.2.3",
+      "dependencies": {},
+      "shasum": "ba0c9189acc81a6233baacd50a637ff7e37b9aea"
+    },
+    "shell-quote": {
+      "name": "shell-quote",
+      "version": "0.0.1",
+      "dependencies": {},
+      "shasum": "1a41196f3c0333c482323593d6886ecf153dd986",
+      "from": "~0.0.1"
+    },
+    "insert-module-globals": {
+      "name": "insert-module-globals",
+      "version": "1.1.0",
+      "dependencies": {
+        "through": {
+          "name": "through",
+          "version": "2.2.7",
+          "shasum": "6e8e21200191d4eb6a99f6f010df46aa1c6eb2bd",
+          "from": "~2.2.0",
+          "dependencies": {}
+        },
+        "JSONStream": {
+          "name": "JSONStream",
+          "version": "0.4.4",
+          "dependencies": {},
+          "shasum": "cc2cf119286c45be150423cbc128d480e9b54ae2",
+          "from": "~0.4.3"
+        }
+      },
+      "shasum": "a9a72ff0721ba43db248400ce9bdaa30c9b5f1d1",
+      "from": "~1.1.0"
+    },
+    "commondir": {
+      "name": "commondir",
+      "version": "0.0.1",
+      "dependencies": {},
+      "shasum": "89f00fdcd51b519c578733fec563e6a6da7f5be2"
+    },
+    "lexical-scope": {
+      "name": "lexical-scope",
+      "version": "0.0.14",
+      "dependencies": {},
+      "shasum": "d7e3e88c7b0607c64036529d1df6c5bf0d7b2021"
+    },
+    "astw": {
+      "name": "astw",
+      "version": "0.0.0",
+      "dependencies": {},
+      "shasum": "4490866a3ef116aaf91adba63ca7ddf70b6d59bd"
+    },
+    "process": {
+      "name": "process",
+      "version": "0.5.1",
+      "shasum": "f9af36059dfe99556bd43fd220aabb617c1ef4a3",
+      "dependencies": {}
+    },
+    "syntax-error": {
+      "name": "syntax-error",
+      "version": "0.0.1",
+      "dependencies": {
+        "esprima": {
+          "name": "esprima",
+          "version": "0.9.9",
+          "dependencies": {},
+          "shasum": "1b90925c975d632d7282939c3bb9c3a423c30490",
+          "from": "~0.9.9"
+        }
+      },
+      "shasum": "019d075348cd8c5b79f0603c73e53891a7c5235d",
+      "from": "~0.0.0"
+    },
+    "browser-builtins": {
+      "name": "browser-builtins",
+      "version": "1.0.2",
+      "dependencies": {
+        "resolve": {
+          "name": "resolve",
+          "version": "0.3.1",
+          "shasum": "34c63447c664c70598d1c9b126fc43b2a24310a4",
+          "from": "0.3.1",
+          "dependencies": {}
+        }
+      },
+      "shasum": "a480db9c944e001387c343c8d00d26ff654fabd2",
+      "from": "~1.0.1"
+    },
+    "punycode": {
+      "name": "punycode",
+      "version": "1.2.2",
+      "shasum": "a7727afa42fc80a4bc19f7fbecde6ecec7e5a2c4",
+      "dependencies": {}
+    },
+    "console-browserify": {
+      "name": "console-browserify",
+      "version": "0.1.6",
+      "dependencies": {},
+      "shasum": "d128a3c0bb88350eb5626c6e7c71a6f0fd48983c"
+    },
+    "vm-browserify": {
+      "name": "vm-browserify",
+      "version": "0.0.1",
+      "dependencies": {},
+      "shasum": "51d25979366ab219dfe35a3fc65ecd6af3631d54"
+    },
+    "crypto-browserify": {
+      "name": "crypto-browserify",
+      "version": "0.2.1",
+      "dependencies": {},
+      "shasum": "303ed9046f8604a3d7c35ec4a6d46d2268712078"
+    },
+    "http-browserify": {
+      "name": "http-browserify",
+      "version": "0.1.11",
+      "dependencies": {
+        "concat-stream": {
+          "name": "concat-stream",
+          "version": "0.0.8",
+          "dependencies": {},
+          "shasum": "a7ea79d0ccb0b40499091db930050fb304f62d7d",
+          "from": "0.0.8"
+        }
+      },
+      "shasum": "ac83518d625ce3e26d16df3b49e65383c371804f"
+    },
+    "buffer-browserify": {
+      "name": "buffer-browserify",
+      "version": "0.0.5",
+      "dependencies": {},
+      "shasum": "8aa68631c8a8829c6a4ee7ef9a3ac7f2c31e983e"
+    },
+    "base64-js": {
+      "name": "base64-js",
+      "version": "0.0.2",
+      "dependencies": {},
+      "shasum": "024f0f72afa25b75f9c0ee73cd4f55ec1bed9784"
+    },
+    "zlib-browserify": {
+      "name": "zlib-browserify",
+      "version": "0.0.1",
+      "dependencies": {},
+      "shasum": "4fa6a45d00dbc15f318a4afa1d9afc0258e176cc"
+    },
+    "inherits": {
+      "name": "inherits",
+      "version": "1.0.0",
+      "dependencies": {},
+      "shasum": "38e1975285bf1f7ba9c84da102bb12771322ac48",
+      "from": "~1.0.0"
+    },
+    "optimist": {
+      "name": "optimist",
+      "version": "0.5.2",
+      "dependencies": {},
+      "shasum": "85c8c1454b3315e4a78947e857b1df033450bfbc",
+      "from": "~0.5.1"
+    },
+    "wordwrap": {
+      "name": "wordwrap",
+      "version": "0.0.2",
+      "dependencies": {},
+      "shasum": "b79669bb42ecb409f83d583cad52ca17eaa1643f"
+    },
+    "umd": {
+      "name": "umd",
+      "version": "1.1.1",
+      "dependencies": {},
+      "shasum": "481b64655b1b3db0c1f3910225c3804fc6d7ec58",
+      "from": "~1.1.0"
+    },
+    "rfile": {
+      "name": "rfile",
+      "version": "1.0.0",
+      "dependencies": {
+        "resolve": {
+          "name": "resolve",
+          "version": "0.3.1",
+          "shasum": "34c63447c664c70598d1c9b126fc43b2a24310a4",
+          "from": "~0.3.0",
+          "dependencies": {}
+        }
+      },
+      "shasum": "59708cf90ca1e74c54c3cfc5c36fdb9810435261"
+    },
+    "callsite": {
+      "name": "callsite",
+      "version": "1.0.0",
+      "dependencies": {},
+      "shasum": "280398e5d664bd74038b6f0905153e6e8af1bc20"
+    },
+    "ruglify": {
+      "name": "ruglify",
+      "version": "1.0.0",
+      "dependencies": {},
+      "shasum": "dc8930e2a9544a274301cc9972574c0d0986b675"
+    },
+    "uglify-js": {
+      "name": "uglify-js",
+      "version": "2.2.5",
+      "dependencies": {
+        "optimist": {
+          "name": "optimist",
+          "version": "0.3.7",
+          "dependencies": {},
+          "shasum": "c90941ad59e4273328923074d2cf2e7cbc6ec0d9",
+          "from": "~0.3.5"
+        }
+      },
+      "shasum": "a6e02a70d839792b9780488b7b8b184c095c99c7"
+    }
+  },
+  "shasum": "535da3056f70426e72a6da873780b015d2d08dfc"
+}
