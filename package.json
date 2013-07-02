@@ -10,11 +10,11 @@
   "dependencies": {
     "mkdirp": "~0.3.5",
     "pull-traverse": "~1.0.0",
-    "pull-stream": "~2.20.0",
+    "pull-stream": ">=2.20 <3",
     "rimraf": "~2.2.0",
     "request": "2",
     "tar": ">=0.1.17 <0.2",
-    "pull-stream": ">=2.20 <3"
+    "pull-paramap": "~1.0.1"
   },
   "devDependencies": {},
   "scripts": {
