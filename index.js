@@ -10,7 +10,7 @@ var rimraf  = require('rimraf')
 var tar     = require('tar')
 var pull    = require('pull-stream')
 var pt      = require('pull-traverse')
-
+var paramap = require('pull-paramap')
 
 module.exports = function (config) {
   config = config || {}
@@ -19,9 +19,9 @@ module.exports = function (config) {
   var registry = config.registry || 'http://registry.npmjs.org'
 
   var tmpdir = config.tmp || os.tmpdir()
-
+  //http://isaacs.iriscouch.com/registry/npm/npm-1.3.1.tgz
   function getUrl (name, ver) {
-    return registry +"/" + name + "/-/" + name + "-" + ver + ".tgz"
+    return registry +"/" + name + "/" + name + "-" + ver + ".tgz"
   }
 
   function empty (obj) {
@@ -42,7 +42,6 @@ module.exports = function (config) {
     var tmp = path.join(tmpdir, ''+Date.now() + Math.random())
 
     fs.stat(cache, function (err) {
-
       var createStream = !err
       ? function (cb) { cb(null, fs.createReadStream(cache)) }
       : function (cb) {
@@ -60,6 +59,14 @@ module.exports = function (config) {
           var i = 1
           stream.on('error', next)
           stream.pipe(zlib.createGunzip())
+          .on('error', function (err) {
+            err.message = (
+                err.message
+              + '\n trying to install '
+              + name + '@' + ver
+            )
+            i = -1; cb(err)
+          })
           .pipe(tar.Extract({path: tmp}))
           .on('end', next)
           function next (err) {
@@ -92,7 +99,7 @@ module.exports = function (config) {
       //unpack every file, so that it can be moved into place.
       //optimization: if a module has no deps,
       //just link it.
-      pull.asyncMap(function (pkg, cb) {
+      paramap(function (pkg, cb) {
         preparePackage(pkg, function (err, data) {
           pkg.tmp = data
           cb(err, pkg)
@@ -100,16 +107,16 @@ module.exports = function (config) {
       }, 64),
       pull.asyncMap(function (pkg, cb) {
         if(!pkg.tmp)
-          return cb(new Error('no path for:'+ pkg.name))
+          return cb(new Error('no path for:'+ pkg.name), null)
 
         var source = path.join(pkg.tmp, 'package')
         var dest   = path.join(pkg.path, pkg.name)
         mkdirp(pkg.path, function () {
           fs.lstat(dest, function (err) {
-            if(!err) return cb()
+            if(!err) return cb(null, null)
             fs.rename(source, dest, function (err) {
               console.error(pkg.name + '@' + pkg.version, '->', pkg.path)
-              cb(err)
+              cb(err, null)
             })
           })
         })
@@ -128,9 +135,12 @@ module.exports = function (config) {
 
       db.resolve(args.shift(), config, function (err, tree) {
         if(err) return cb(err)
-        installTree(tree, {
+        
+       installTree(tree, {
           path: config.installPath, tmp: config.tmp
-        }, cb)
+        }, function (err, val) {
+          cb(err, val)
+        })
       })
       return true
     })
