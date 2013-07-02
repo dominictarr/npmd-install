@@ -13,6 +13,7 @@ var pt      = require('pull-traverse')
 
 
 module.exports = function (config) {
+  config = config || {}
   var exports = installTree
   //FIX THIS
   var registry = config.registry || 'http://registry.npmjs.org'
