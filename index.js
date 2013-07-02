@@ -114,8 +114,10 @@ function (tree, opts, cb) {
 exports = module.exports = installTree
 
 exports.commands = function (db, config) {
-  db.commands.install = function (config, cb) {
-    db.resolve(config._[0], {greedy: config.greedy}, function (err, tree) {
+  db.cli.push(function (db, config, cb) {
+    var args = config._.slice()
+    if('install' !== args.shift()) return
+    db.resolve(args, {greedy: config.greedy}, function (err, tree) {
       if(err) return cb(err)
       installTree(tree, {path: config.installPath}, cb)
     })
