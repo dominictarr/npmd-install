@@ -5,7 +5,6 @@ var zlib    = require('zlib')
 var os      = require('os')
 
 var mkdirp  = require('mkdirp')
-var rimraf  = require('rimraf')
 var tar     = require('tar')
 var pull    = require('pull-stream')
 var pt      = require('pull-traverse')
