@@ -17,7 +17,7 @@ module.exports = function (config) {
   //FIX THIS
   var registry = config.registry || 'http://registry.npmjs.org'
 
-  var tmpdir = config.tmp || os.tmpdir()
+  var tmpdir = config.tmp || (os.tmpdir || os.tmpDir)()
   //http://isaacs.iriscouch.com/registry/npm/npm-1.3.1.tgz
   function getUrl (name, ver) {
     return registry +"/" + name + "/" + name + "-" + ver + ".tgz"
@@ -45,7 +45,7 @@ module.exports = function (config) {
       ? function (cb) { cb(null, fs.createReadStream(cache)) }
       : function (cb) {
         mkdirp(path.dirname(cache), function () {
-          http.get(getUrl(name, ver), function (res) {      
+          http.get(getUrl(name, ver), function (res) {
             res.pipe(fs.createWriteStream(cache))
             cb(null, res)
           })
@@ -134,7 +134,7 @@ module.exports = function (config) {
 
       db.resolve(args.shift(), config, function (err, tree) {
         if(err) return cb(err)
-        
+
        installTree(tree, {
           path: config.installPath, tmp: config.tmp
         }, function (err, val) {
