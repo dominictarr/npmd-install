@@ -4,7 +4,6 @@ var http    = require('http')
 var zlib    = require('zlib')
 var os      = require('os')
 
-var request = require('request')
 var mkdirp  = require('mkdirp')
 var rimraf  = require('rimraf')
 var tar     = require('tar')
@@ -17,14 +16,21 @@ var unpack  = require('npmd-unpack')
 module.exports = function (config) {
   config = config || {}
   var exports = installTree
+  //FIX THIS
+  var registry = config.registry || 'http://registry.npmjs.org'
+
+  var tmpdir = config.tmp || (os.tmpdir || os.tmpDir)()
+  //http://isaacs.iriscouch.com/registry/npm/npm-1.3.1.tgz
+
+  function getUrl (name, ver) {
+    return registry +"/" + name + "/" + name + "-" + ver + ".tgz"
+  }
 
   function empty (obj) {
     for(var i in obj)
       return false
     return true
   }
-
-  var tmpdir = os.tmpdir ? os.tmpdir() : process.env.HOME || '/tmp'
 
   exports.installTree = installTree
   function installTree (tree, opts, cb) {
@@ -89,7 +95,7 @@ module.exports = function (config) {
 
       db.resolve(args.shift(), config, function (err, tree) {
         if(err) return cb(err)
-        
+
        installTree(tree, {
           path: config.installPath, tmp: config.tmp
         }, function (err, val) {
