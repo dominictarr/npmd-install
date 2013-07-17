@@ -12,17 +12,11 @@ var pull    = require('pull-stream')
 var pt      = require('pull-traverse')
 var paramap = require('pull-paramap')
 
+var unpack  = require('npmd-unpack')
+
 module.exports = function (config) {
   config = config || {}
   var exports = installTree
-  //FIX THIS
-  var registry = config.registry || 'http://registry.npmjs.org'
-
-  var tmpdir = config.tmp || os.tmpdir()
-  //http://isaacs.iriscouch.com/registry/npm/npm-1.3.1.tgz
-  function getUrl (name, ver) {
-    return registry +"/" + name + "/" + name + "-" + ver + ".tgz"
-  }
 
   function empty (obj) {
     for(var i in obj)
@@ -30,54 +24,7 @@ module.exports = function (config) {
     return true
   }
 
-  var preparePackage = exports.preparePackage =
-  function (pkg, cb) {
-    if(!pkg.version)
-      return cb(new Error(pkg.name + ' has no version'))
-
-    var name = pkg.name
-    var ver  = pkg.version
-    //SHOULD COME FROM CONFIG
-    var cache = path.join(process.env.HOME, '.npm', name, ver, 'package.tgz')
-    var tmp = path.join(tmpdir, ''+Date.now() + Math.random())
-
-    fs.stat(cache, function (err) {
-      var createStream = !err
-      ? function (cb) { cb(null, fs.createReadStream(cache)) }
-      : function (cb) {
-        mkdirp(path.dirname(cache), function () {
-          http.get(getUrl(name, ver), function (res) {      
-            res.pipe(fs.createWriteStream(cache))
-            cb(null, res)
-          })
-        })
-      }
-
-      mkdirp(tmp, function (err) {
-        if(err) return cb(err)
-        createStream(function (err, stream) {
-          var i = 1
-          stream.on('error', next)
-          stream.pipe(zlib.createGunzip())
-          .on('error', function (err) {
-            err.message = (
-                err.message
-              + '\n trying to install '
-              + name + '@' + ver
-            )
-            i = -1; cb(err)
-          })
-          .pipe(tar.Extract({path: tmp}))
-          .on('end', next)
-          function next (err) {
-            if(--i) return
-            cb(err, tmp)
-          }
-        })
-      })
-
-    })
-  }
+  var tmpdir = os.tmpdir ? os.tmpdir() : process.env.HOME || '/tmp'
 
   exports.installTree = installTree
   function installTree (tree, opts, cb) {
@@ -100,8 +47,15 @@ module.exports = function (config) {
       //optimization: if a module has no deps,
       //just link it.
       paramap(function (pkg, cb) {
-        preparePackage(pkg, function (err, data) {
-          pkg.tmp = data
+        var target = path.join(tmpdir, Date.now() + '-' + Math.random())
+        unpack.unpack(pkg, {target: target, cache: config.cache}, function (err, shasum) {
+          if(pkg.shasum && shasum !== pkg.shasum)
+            console.error(
+              'WARN! expected ' 
+            + pkg.name+'@'+pkg.version + 
+            + ' to have shasum='+shasum
+            )
+          pkg.tmp = path.join(target, 'package')
           cb(err, pkg)
         })
       }, 64),
@@ -109,7 +63,7 @@ module.exports = function (config) {
         if(!pkg.tmp)
           return cb(new Error('no path for:'+ pkg.name), null)
 
-        var source = path.join(pkg.tmp, 'package')
+        var source = pkg.tmp
         var dest   = path.join(pkg.path, pkg.name)
         mkdirp(pkg.path, function () {
           fs.lstat(dest, function (err) {
