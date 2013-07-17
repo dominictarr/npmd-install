@@ -14,7 +14,8 @@
     "rimraf": "~2.2.0",
     "request": "2",
     "tar": ">=0.1.17 <0.2",
-    "pull-paramap": "~1.0.1"
+    "pull-paramap": "~1.0.1",
+    "npmd-unpack": "~1.0.0"
   },
   "devDependencies": {},
   "scripts": {
