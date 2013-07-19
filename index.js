@@ -2,7 +2,7 @@ var fs      = require('fs')
 var path    = require('path')
 var http    = require('http')
 var zlib    = require('zlib')
-var os      = require('os')
+var os      = require('osenv')
 
 var mkdirp  = require('mkdirp')
 var rimraf  = require('rimraf')
@@ -19,7 +19,7 @@ module.exports = function (config) {
   //FIX THIS
   var registry = config.registry || 'http://registry.npmjs.org'
 
-  var tmpdir = config.tmp || (os.tmpdir || os.tmpDir)()
+  var tmpdir = osenv.tmpdir()
   //http://isaacs.iriscouch.com/registry/npm/npm-1.3.1.tgz
 
   function getUrl (name, ver) {
