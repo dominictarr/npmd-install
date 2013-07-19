@@ -19,7 +19,7 @@ module.exports = function (config) {
   //FIX THIS
   var registry = config.registry || 'http://registry.npmjs.org'
 
-  var tmpdir = osenv.tmpdir()
+  var tmpdir = os.tmpdir()
   //http://isaacs.iriscouch.com/registry/npm/npm-1.3.1.tgz
 
   function getUrl (name, ver) {
