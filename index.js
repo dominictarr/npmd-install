@@ -58,7 +58,7 @@ module.exports = function (config) {
           if(pkg.shasum && shasum !== pkg.shasum)
             console.error(
               'WARN! expected ' 
-            + pkg.name+'@'+pkg.version + 
+            + pkg.name+'@'+pkg.version
             + ' to have shasum='+shasum
             )
           pkg.tmp = path.join(target, 'package')
