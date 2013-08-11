@@ -1,0 +1,37 @@
+{
+  "foo": {
+    "name": "foo",
+    "version": "1.0.0",
+    "shasum": "943e0ec03df00ebeb6273a5b94b916ba54b47581",
+    "dependencies": {}
+  },
+  "bar": {
+    "name": "bar",
+    "version": "0.1.2",
+    "shasum": "ec36d80c5fea1111fe1e32c9db38a61053225155",
+    "dependencies": {
+      "watch": {
+        "name": "watch",
+        "version": "0.3.3",
+        "shasum": "2aa776716ed463464dbaa2c2e4f9c6aca1e2fa3c",
+        "from": "~ 0.3.2",
+        "dependencies": {}
+      },
+      "optimist": {
+        "name": "optimist",
+        "version": "0.2.8",
+        "shasum": "e981ab7e268b457948593b55674c099a815cac31",
+        "from": "~ 0.2.4",
+        "dependencies": {
+          "wordwrap": {
+            "name": "wordwrap",
+            "version": "0.0.2",
+            "shasum": "b79669bb42ecb409f83d583cad52ca17eaa1643f",
+            "from": ">=0.0.1 <0.1.0",
+            "dependencies": {}
+          }
+        }
+      }
+    }
+  }
+}
