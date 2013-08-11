@@ -10,12 +10,28 @@ var tar     = require('tar')
 var pull    = require('pull-stream')
 var pt      = require('pull-traverse')
 var paramap = require('pull-paramap')
-
+var cont    = require('continuable')
+var cpara   = require('continuable-hash')
 var unpack  = require('npmd-unpack')
+var deps    = require('get-deps')
+
+function empty (obj) {
+  for(var i in obj)
+    return false
+  return true
+}
+
+function map (ob, iter) {
+  if(Array.isArray(ob)) return ob.map(iter)
+  var a = {}
+  for(var k in ob)
+    a[k] = iter(ob[k], k, ob)
+  return a
+}
+
 
 module.exports = function (config) {
   config = config || {}
-  var exports = installTree
   //FIX THIS
   var registry = config.registry || 'http://registry.npmjs.org'
 
@@ -26,14 +42,7 @@ module.exports = function (config) {
     return registry +"/" + name + "/" + name + "-" + ver + ".tgz"
   }
 
-  function empty (obj) {
-    for(var i in obj)
-      return false
-    return true
-  }
-
-  exports.installTree = installTree
-  function installTree (tree, opts, cb) {
+  var installTree = cont.to(function(tree, opts, cb) {
     if(!cb)
       cb = opts, opts = {}
 
@@ -84,19 +93,34 @@ module.exports = function (config) {
       pull.drain(null, cb)
     )
 
-  }
+  })
 
-  //exports = module.exports = installTree
+  exports = installTree
+
+  var installAll = exports.installAll =
+  
+  cont.to(function (tree, opts, cb) {
+
+    if(!cb) cb = opts, opts = {}
+
+    cpara(map(tree, function (tree) {
+      return installTree(tree, opts) 
+    })) (cb)
+
+  })
 
   exports.commands = function (db, config) {
     db.commands.push(function (db, config, cb) {
       var args = config._.slice()
       if('install' !== args.shift()) return
 
-      db.resolve(args.shift(), config, function (err, tree) {
+      if(!args.length)
+        args = deps(process.cwd(), config)
+
+      db.resolve(args, config, function (err, tree) {
         if(err) return cb(err)
 
-       installTree(tree, {
+       installAll(tree, {
           path: config.installPath, tmp: config.tmp
         }, function (err, val) {
           cb(err, val)
