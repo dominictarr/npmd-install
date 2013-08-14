@@ -123,9 +123,7 @@ module.exports = function (config) {
         if('string' === typeof tree.name)
           installTree(tree, config) (cb)
         else
-          installAll(tree, {
-            path: config.installPath, tmp: config.tmp
-          }, function (err, val) {
+          installAll(tree, config, function (err, val) {
             cb(err, val)
           })
       })
