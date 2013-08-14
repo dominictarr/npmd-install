@@ -50,6 +50,7 @@ module.exports = function (config) {
 
     pull(
       pt.widthFirst(tree, function (pkg) {
+        console.log(pkg)
         return pull(
           pull.values(pkg.dependencies),
           pull.map(function (_pkg) {
@@ -100,13 +101,13 @@ module.exports = function (config) {
   var installAll = exports.installAll =
   
   cont.to(function (tree, opts, cb) {
-
     if(!cb) cb = opts, opts = {}
+    if('string' === typeof tree.name)
+      return installTree(tree, config) (cb)
 
     cpara(map(tree, function (tree) {
       return installTree(tree, opts) 
     })) (cb)
-
   })
 
   exports.commands = function (db, config) {
@@ -119,12 +120,14 @@ module.exports = function (config) {
 
       db.resolve(args, config, function (err, tree) {
         if(err) return cb(err)
-
-       installAll(tree, {
-          path: config.installPath, tmp: config.tmp
-        }, function (err, val) {
-          cb(err, val)
-        })
+        if('string' === typeof tree.name)
+          installTree(tree, config) (cb)
+        else
+          installAll(tree, {
+            path: config.installPath, tmp: config.tmp
+          }, function (err, val) {
+            cb(err, val)
+          })
       })
       return true
     })
