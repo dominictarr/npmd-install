@@ -18,7 +18,7 @@
     "osenv": "0.0.3",
     "continuable": "1.1.6",
     "continuable-hash": "0.1.4",
-    "get-deps": "2.0.0"
+    "get-deps": "2.0.1"
   },
   "devDependencies": {},
   "scripts": {
