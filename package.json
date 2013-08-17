@@ -20,7 +20,9 @@
     "continuable-hash": "0.1.4",
     "get-deps": "2.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "tape": "~1.0.4"
+  },
   "scripts": {
     "test": "set -e; for t in test/*.js; do node $t; done"
   },

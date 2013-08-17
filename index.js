@@ -15,6 +15,8 @@ var cpara   = require('continuable-hash')
 var unpack  = require('npmd-unpack')
 var deps    = require('get-deps')
 
+var EventEmitter = require('events').EventEmitter
+
 function empty (obj) {
   for(var i in obj)
     return false
@@ -33,6 +35,7 @@ function map (ob, iter) {
 module.exports = function (config) {
   config = config || {}
   //FIX THIS
+
   var registry = config.registry || 'http://registry.npmjs.org'
 
   var tmpdir = os.tmpdir()
@@ -46,11 +49,11 @@ module.exports = function (config) {
     if(!cb)
       cb = opts, opts = {}
 
-    tree.path = path.join(opts.path || process.cwd(), 'node_modules')
-
+    var installPath = opts.path || process.cwd()
+    tree.path = path.join(installPath, 'node_modules')
+    console.log(opts)
     pull(
       pt.widthFirst(tree, function (pkg) {
-        console.log(pkg)
         return pull(
           pull.values(pkg.dependencies),
           pull.map(function (_pkg) {
@@ -85,7 +88,12 @@ module.exports = function (config) {
           fs.lstat(dest, function (err) {
             if(!err) return cb(null, null)
             fs.rename(source, dest, function (err) {
-              console.error(pkg.name + '@' + pkg.version, '->', pkg.path)
+              console.error(pkg.name + '@' + pkg.version, '->',
+                path.relative(installPath, path.join(pkg.path, pkg.name)))
+              if(err) {
+                
+                err.stack = err.message + '\n(mv ' + source + ' ' + dest + ')' + '\n' + err.stack
+              }
               cb(err, null)
             })
           })
@@ -103,7 +111,7 @@ module.exports = function (config) {
   cont.to(function (tree, opts, cb) {
     if(!cb) cb = opts, opts = {}
     if('string' === typeof tree.name)
-      return installTree(tree, config) (cb)
+      return installTree(tree, opts) (cb)
 
     cpara(map(tree, function (tree) {
       return installTree(tree, opts) 
