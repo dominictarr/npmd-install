@@ -14,6 +14,7 @@ var cont    = require('continuable')
 var cpara   = require('continuable-hash')
 var unpack  = require('npmd-unpack')
 var deps    = require('get-deps')
+var linkBin = require('npmd-bin')
 
 var EventEmitter = require('events').EventEmitter
 
@@ -122,6 +123,14 @@ module.exports = function (config) {
     db.commands.push(function (db, config, cb) {
       var args = config._.slice()
       if('install' !== args.shift()) return
+
+      if(!config.path && config.global)
+        config.path = config.prefix
+
+      if(!config.bin)
+        config.bin = config.global 
+          ? join(config.prefix, 'lib', 'bin')
+          : join(config.path, 'node_modules', '.bin')
 
       if(!args.length)
         args = deps(process.cwd(), config)
