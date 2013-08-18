@@ -129,8 +129,8 @@ module.exports = function (config) {
 
       if(!config.bin)
         config.bin = config.global 
-          ? join(config.prefix, 'lib', 'bin')
-          : join(config.path, 'node_modules', '.bin')
+          ? path.join(config.prefix, 'lib', 'bin')
+          : path.join(config.path || process.cwd(), 'node_modules', '.bin')
 
       if(!args.length)
         args = deps(process.cwd(), config)
