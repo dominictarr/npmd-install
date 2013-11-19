@@ -1,12 +1,10 @@
 var fs      = require('fs')
 var path    = require('path')
-var http    = require('http')
 var zlib    = require('zlib')
 var os      = require('osenv')
 
 var mkdirp  = require('mkdirp')
 var rimraf  = require('rimraf')
-var tar     = require('tar')
 var pull    = require('pull-stream')
 var pt      = require('pull-traverse')
 var paramap = require('pull-paramap')
@@ -40,11 +38,6 @@ module.exports = function (config) {
   var registry = config.registry || 'http://registry.npmjs.org'
 
   var tmpdir = os.tmpdir()
-  //http://isaacs.iriscouch.com/registry/npm/npm-1.3.1.tgz
-
-  function getUrl (name, ver) {
-    return registry +"/" + name + "/" + name + "-" + ver + ".tgz"
-  }
 
   var installTree = cont.to(function(tree, opts, cb) {
     if(!cb)
@@ -52,7 +45,7 @@ module.exports = function (config) {
 
     var installPath = opts.path || process.cwd()
     tree.path = path.join(installPath, 'node_modules')
-    console.log(opts)
+
     pull(
       pt.widthFirst(tree, function (pkg) {
         return pull(
@@ -91,8 +84,7 @@ module.exports = function (config) {
             fs.rename(source, dest, function (err) {
               console.error(pkg.name + '@' + pkg.version, '->',
                 path.relative(installPath, path.join(pkg.path, pkg.name)))
-              if(err) {
-                
+              if(err) {                
                 err.stack = err.message + '\n(mv ' + source + ' ' + dest + ')' + '\n' + err.stack
               }
               cb(err, null)
@@ -115,7 +107,7 @@ module.exports = function (config) {
       return installTree(tree, opts) (cb)
 
     cpara(map(tree, function (tree) {
-      return installTree(tree, opts) 
+      return installTree(tree, opts)
     })) (cb)
   })
 
@@ -128,12 +120,14 @@ module.exports = function (config) {
         config.path = config.prefix
 
       if(!config.bin)
-        config.bin = config.global 
+        config.bin = config.global
           ? path.join(config.prefix, 'lib', 'bin')
-          : path.join(config.path || process.cwd(), 'node_modules', '.bin')
+          : path.join(config.path || process.cwd(),
+              'node_modules', '.bin')
 
-      if(!args.length)
+      if(!args.length) {
         args = deps(process.cwd(), config)
+      }
 
       db.resolve(args, config, function (err, tree) {
         if(err) return cb(err)
