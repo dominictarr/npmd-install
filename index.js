@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 var fs      = require('fs')
 var path    = require('path')
 var os      = require('osenv')
@@ -29,81 +31,93 @@ function map (ob, iter) {
 }
 
 
-  var installTree = cont.to(function(tree, opts, cb) {
-    if(!cb)
-      cb = opts, opts = {}
+var installTree = cont.to(function(tree, opts, cb) {
+  if(!cb)
+    cb = opts, opts = {}
 
-    //this only works on unix. in practice, you must pass in the config object.
-    var cache = opts.cache || path.join(process.env.HOME, '.npm')
+  //this only works on unix. in practice, you must pass in the config object.
+  var cache = opts.cache || path.join(process.env.HOME, '.npm')
 
-    var installPath = opts.path || process.cwd()
+  var installPath = opts.path || process.cwd()
 
-    var tmpdir = os.tmpdir()
+  var tmpdir = os.tmpdir()
 
-    tree.path = path.join(installPath, 'node_modules')
+  tree.path = path.join(installPath, 'node_modules')
 
-    pull(
-      pt.widthFirst(tree, function (pkg) {
-        return pull(
-          pull.values(pkg.dependencies),
-          pull.map(function (_pkg) {
-            _pkg.path = path.join(pkg.path, pkg.name, 'node_modules')
-            return _pkg
-          })
-        )
-      }),
-      //unpack every file, so that it can be moved into place.
-      //optimization: if a module has no deps,
-      //just link it.
-      paramap(function (pkg, cb) {
-        var target = path.join(tmpdir, Date.now() + '-' + Math.random())
-        unpack.unpack(pkg, {target: target, cache: opts.cache}, function (err, shasum) {
-          if(pkg.shasum && shasum !== pkg.shasum)
-            console.error(
-              'WARN! expected ' 
-            + pkg.name+'@'+pkg.version
-            + ' to have shasum='+shasum
-            )
-          pkg.tmp = path.join(target, 'package')
-          cb(err, pkg)
+  pull(
+    pt.widthFirst(tree, function (pkg) {
+      return pull(
+        pull.values(pkg.dependencies),
+        pull.map(function (_pkg) {
+          _pkg.path = path.join(pkg.path, pkg.name, 'node_modules')
+          return _pkg
         })
-      }, 64),
-      pull.asyncMap(function (pkg, cb) {
-        if(!pkg.tmp)
-          return cb(new Error('no path for:'+ pkg.name), null)
+      )
+    }),
+    //unpack every file, so that it can be moved into place.
+    //optimization: if a module has no deps,
+    //just link it.
+    paramap(function (pkg, cb) {
+      var target = path.join(tmpdir, Date.now() + '-' + Math.random())
+      unpack.unpack(pkg, {target: target, cache: opts.cache}, function (err, shasum) {
+        if(pkg.shasum && shasum !== pkg.shasum)
+          console.error(
+            'WARN! expected ' 
+          + pkg.name+'@'+pkg.version
+          + ' to have shasum='+shasum
+          )
+        pkg.tmp = path.join(target, 'package')
+        cb(err, pkg)
+      })
+    }, 64),
+    pull.asyncMap(function (pkg, cb) {
+      if(!pkg.tmp)
+        return cb(new Error('no path for:'+ pkg.name), null)
 
-        var source = pkg.tmp
-        var dest   = path.join(pkg.path, pkg.name)
-        mkdirp(pkg.path, function () {
-          fs.lstat(dest, function (err) {
-            if(!err) return cb(null, null)
-            fs.rename(source, dest, function (err) {
-              console.error(pkg.name + '@' + pkg.version, '->',
-                path.relative(installPath, path.join(pkg.path, pkg.name)))
-              if(err) {                
-                err.stack = err.message + '\n(mv ' + source + ' ' + dest + ')' + '\n' + err.stack
-              }
-              cb(err, null)
-            })
+      var source = pkg.tmp
+      var dest   = path.join(pkg.path, pkg.name)
+      mkdirp(pkg.path, function () {
+        fs.lstat(dest, function (err) {
+          if(!err) return cb(null, null)
+          fs.rename(source, dest, function (err) {
+            console.error(pkg.name + '@' + pkg.version, '->',
+              path.relative(installPath, path.join(pkg.path, pkg.name)))
+            if(err) {                
+              err.stack = err.message + '\n(mv ' + source + ' ' + dest + ')' + '\n' + err.stack
+            }
+            cb(err, null)
           })
         })
-      }),
-      pull.drain(null, cb)
-    )
+      })
+    }),
+    pull.drain(null, cb)
+  )
 
+})
+
+
+var install = exports =  module.exports =
+cont.to(function (tree, opts, cb) {
+  if(!cb) cb = opts, opts = {}
+
+  if('string' === typeof tree.name)
+    return installTree(tree, opts) (cb)
+
+  cpara(map(tree, function (tree) {
+    return installTree(tree, opts)
+  })) (cb)
+})
+
+//process.on is test for !browserify
+if(!module.parent && process.on) {
+  var b = ''
+  process.stdin.on('data', function (data) {
+    b += data.toString()
   })
-
-
-  var installAll = exports =  module.exports =
-  
-  cont.to(function (tree, opts, cb) {
-    if(!cb) cb = opts, opts = {}
-    if('string' === typeof tree.name)
-      return installTree(tree, opts) (cb)
-
-    cpara(map(tree, function (tree) {
-      return installTree(tree, opts)
-    })) (cb)
+  .on('end', function () {
+    install(JSON.parse(b), function (err) {
+      if(err) throw err
+    })
   })
-
+}
 
