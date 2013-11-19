@@ -1,4 +1,4 @@
-var installAll = require('../')({}).installAll
+var install = require('../')
 var tape = require('tape')
 var join = require('path').join
 
@@ -7,7 +7,7 @@ require('rimraf').sync(join(__dirname, 'node_modules'))
 tape('install foo bar', function (t) {
 
   var snapshot = require('./foo-bar.json')
-  installAll(snapshot, {path: __dirname}, function (err) {
+  install(snapshot, {path: __dirname}, function (err) {
     if(err) throw err
     console.log('done')
 

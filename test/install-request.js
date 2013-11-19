@@ -1,11 +1,11 @@
-var installTree = require('../')({})
+var install = require('../')
 var tape = require('tape')
 var snapshot = require('./request-dep-tree.json')
 var join = require('path').join
 require('rimraf').sync(join(__dirname, 'node_modules'))
 
 tape('install request', function (t) {
-  installTree(snapshot, {path: __dirname}, function (err) {
+  install(snapshot, {path: __dirname}, function (err) {
     if(err) throw err
     console.log('done')
     var reqPkg = require('./node_modules/request/package.json')
