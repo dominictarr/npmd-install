@@ -1,10 +1,8 @@
 var fs      = require('fs')
 var path    = require('path')
-var zlib    = require('zlib')
 var os      = require('osenv')
 
 var mkdirp  = require('mkdirp')
-var rimraf  = require('rimraf')
 var pull    = require('pull-stream')
 var pt      = require('pull-traverse')
 var paramap = require('pull-paramap')
@@ -31,21 +29,16 @@ function map (ob, iter) {
 }
 
 
-  //config = config || {}
-  //FIX THIS
-
-  //var registry = config.registry || 'http://registry.npmjs.org'
-
-  //var tmpdir = os.tmpdir()
-
   var installTree = cont.to(function(tree, opts, cb) {
     if(!cb)
       cb = opts, opts = {}
 
-    if(!opts.cache)
-      return cb(new Error('must provide cache option'))
+    //this only works on unix. in practice, you must pass in the config object.
+    var cache = opts.cache || path.join(process.env.HOME, '.npm')
 
     var installPath = opts.path || process.cwd()
+
+    var tmpdir = os.tmpdir()
 
     tree.path = path.join(installPath, 'node_modules')
 
@@ -100,9 +93,8 @@ function map (ob, iter) {
 
   })
 
-  exports = installTree
 
-  var installAll = exports.installAll =
+  var installAll = exports =  module.exports =
   
   cont.to(function (tree, opts, cb) {
     if(!cb) cb = opts, opts = {}
@@ -113,3 +105,5 @@ function map (ob, iter) {
       return installTree(tree, opts)
     })) (cb)
   })
+
+
