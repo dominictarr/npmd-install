@@ -31,19 +31,22 @@ function map (ob, iter) {
 }
 
 
-module.exports = function (config) {
-  config = config || {}
+  //config = config || {}
   //FIX THIS
 
-  var registry = config.registry || 'http://registry.npmjs.org'
+  //var registry = config.registry || 'http://registry.npmjs.org'
 
-  var tmpdir = os.tmpdir()
+  //var tmpdir = os.tmpdir()
 
   var installTree = cont.to(function(tree, opts, cb) {
     if(!cb)
       cb = opts, opts = {}
 
+    if(!opts.cache)
+      return cb(new Error('must provide cache option'))
+
     var installPath = opts.path || process.cwd()
+
     tree.path = path.join(installPath, 'node_modules')
 
     pull(
@@ -61,7 +64,7 @@ module.exports = function (config) {
       //just link it.
       paramap(function (pkg, cb) {
         var target = path.join(tmpdir, Date.now() + '-' + Math.random())
-        unpack.unpack(pkg, {target: target, cache: config.cache}, function (err, shasum) {
+        unpack.unpack(pkg, {target: target, cache: opts.cache}, function (err, shasum) {
           if(pkg.shasum && shasum !== pkg.shasum)
             console.error(
               'WARN! expected ' 
@@ -110,40 +113,3 @@ module.exports = function (config) {
       return installTree(tree, opts)
     })) (cb)
   })
-
-  exports.commands = function (db, config) {
-    db.commands.push(function (db, config, cb) {
-      var args = config._.slice()
-      if('install' !== args.shift()) return
-
-      if(!config.path && config.global)
-        config.path = config.prefix
-
-      if(!config.bin)
-        config.bin = config.global
-          ? path.join(config.prefix, 'lib', 'bin')
-          : path.join(config.path || process.cwd(),
-              'node_modules', '.bin')
-
-      if(!args.length) {
-        args = deps(process.cwd(), config)
-      }
-
-      db.resolve(args, config, function (err, tree) {
-        if(err) return cb(err)
-        if('string' === typeof tree.name)
-          installTree(tree, config) (cb)
-        else
-          installAll(tree, config, function (err, val) {
-            cb(err, val)
-          })
-      })
-      return true
-    })
-  }
-
-  exports.db = function () {}
-
-  return exports
-}
-
