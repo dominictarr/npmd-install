@@ -18,7 +18,7 @@
     "continuable": "1.1.6",
     "continuable-hash": "0.1.4",
     "get-deps": "2.0.4",
-    "npmd-bin": "1.1.0"
+    "optimist": "~0.6.0"
   },
   "devDependencies": {
     "tape": "~1.0.4"
