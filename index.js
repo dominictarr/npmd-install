@@ -88,7 +88,7 @@ var installTree = cont.to(function(tree, opts, cb) {
           function next (err) {
             if(err) return cb(err)
             fs.rename(source, dest, function (err) {
-                path.relative(installPath, path.join(pkg.path, pkg.name)))
+                path.relative(installPath, path.join(pkg.path, pkg.name))
               if(err) {
                 err.stack = err.message + '\n(mv ' + source + ' ' + dest + ')' + '\n' + err.stack
               }
