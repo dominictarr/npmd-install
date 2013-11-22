@@ -30,6 +30,11 @@ function map (ob, iter) {
   return a
 }
 
+var tmpdir = os.tmpdir()
+
+function randDir (pre) {
+  return path.join(tmpdir, (pre || '') + Date.now() + '-' + Math.random())
+}
 
 var installTree = cont.to(function(tree, opts, cb) {
   if(!cb)
@@ -39,8 +44,6 @@ var installTree = cont.to(function(tree, opts, cb) {
   var cache = opts.cache || path.join(process.env.HOME, '.npm')
 
   var installPath = opts.path || process.cwd()
-
-  var tmpdir = os.tmpdir()
 
   tree.path = path.join(installPath, 'node_modules')
 
@@ -58,7 +61,7 @@ var installTree = cont.to(function(tree, opts, cb) {
     //optimization: if a module has no deps,
     //just link it.
     paramap(function (pkg, cb) {
-      var target = path.join(tmpdir, Date.now() + '-' + Math.random())
+      var target = randDir('npmd-unpack-')
       unpack.unpack(pkg, {target: target, cache: opts.cache}, function (err, shasum) {
         if(pkg.shasum && shasum !== pkg.shasum)
           console.error(
@@ -77,16 +80,21 @@ var installTree = cont.to(function(tree, opts, cb) {
       var source = pkg.tmp
       var dest   = path.join(pkg.path, pkg.name)
       mkdirp(pkg.path, function () {
-        fs.lstat(dest, function (err) {
-          if(!err) return cb(null, null)
-          fs.rename(source, dest, function (err) {
-            console.error(pkg.name + '@' + pkg.version, '->',
-              path.relative(installPath, path.join(pkg.path, pkg.name)))
-            if(err) {                
-              err.stack = err.message + '\n(mv ' + source + ' ' + dest + ')' + '\n' + err.stack
-            }
-            cb(err, null)
-          })
+        fs.lstat(dest, function (err, stat) {
+          if(stat)
+            fs.rename(dest ,randDir('npmd-gc-') , next)
+          else next()
+
+          function next (err) {
+            if(err) return cb(err)
+            fs.rename(source, dest, function (err) {
+                path.relative(installPath, path.join(pkg.path, pkg.name)))
+              if(err) {
+                err.stack = err.message + '\n(mv ' + source + ' ' + dest + ')' + '\n' + err.stack
+              }
+              cb(err, null)
+            })
+          }
         })
       })
     }),
