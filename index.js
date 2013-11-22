@@ -12,7 +12,6 @@ var cont    = require('continuable')
 var cpara   = require('continuable-hash')
 var unpack  = require('npmd-unpack')
 var deps    = require('get-deps')
-var linkBin = require('npmd-bin')
 
 var EventEmitter = require('events').EventEmitter
 
@@ -58,7 +57,7 @@ var installTree = cont.to(function(tree, opts, cb) {
       )
     }),
     //unpack every file, so that it can be moved into place.
-    //optimization: if a module has no deps,
+    //possibe optimization: if a module has no deps,
     //just link it.
     paramap(function (pkg, cb) {
       var target = randDir('npmd-unpack-')
@@ -118,6 +117,13 @@ cont.to(function (tree, opts, cb) {
 
 //process.on is test for !browserify
 if(!module.parent && process.on) {
+  var opts = require('optimist').argv
+
+  if(opts.v || opts.version) {
+    console.log(require('./package').version)
+    process.exit(0)
+  }
+
   var b = ''
   process.stdin.on('data', function (data) {
     b += data.toString()
