@@ -117,9 +117,9 @@ cont.to(function (tree, opts, cb) {
 
 //process.on is test for !browserify
 if(!module.parent && process.on) {
-  var opts = require('optimist').argv
+  var config = require('npmd-config')
 
-  if(opts.v || opts.version) {
+  if(config.version) {
     console.log(require('./package').version)
     process.exit(0)
   }
@@ -129,7 +129,7 @@ if(!module.parent && process.on) {
     b += data.toString()
   })
   .on('end', function () {
-    install(JSON.parse(b), function (err) {
+    install(JSON.parse(b), config, function (err) {
       if(err) throw err
     })
   })
