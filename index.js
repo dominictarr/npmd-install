@@ -12,6 +12,7 @@ var cont    = require('continuable')
 var cpara   = require('continuable-hash')
 var unpack  = require('npmd-unpack')
 var deps    = require('get-deps')
+var clone   = require('clone')
 
 var EventEmitter = require('events').EventEmitter
 
@@ -105,16 +106,41 @@ var installTree = cont.to(function(tree, opts, cb) {
 })
 
 
+function clean(tree) {
+
+  function _clean (tree) {
+    if(!tree) return tree
+    delete tree.dependencies
+    delete tree.devDependencies
+    delete tree.optionalDependencies
+    delete tree.peerDependencies
+    return tree
+  }
+
+  if('string' === typeof tree.name)
+    return _clean(tree)
+
+  for(var k in tree)
+    _clean(tree[k])
+
+  return tree
+}
+
+
 var install = exports =  module.exports =
 cont.to(function (tree, opts, cb) {
   if(!cb) cb = opts, opts = {}
 
   if('string' === typeof tree.name)
-    return installTree(tree, opts) (cb)
+    return installTree(tree, opts) (next)
 
   cpara(map(tree, function (tree) {
     return installTree(tree, opts)
-  })) (cb)
+  })) (next)
+
+  function next (err) {
+    cb(err, clean(clone(tree)))
+  }
 })
 
 //process.on is test for !browserify
@@ -131,8 +157,10 @@ if(!module.parent && process.on) {
     b += data.toString()
   })
   .on('end', function () {
-    install(JSON.parse(b), config, function (err) {
+    var tree = JSON.parse(b)
+    install(tree, config, function (err, installed) {
       if(err) throw err
+        console.log(JSON.stringify(installed, null, 2))
     })
   })
 }
