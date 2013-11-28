@@ -29,6 +29,13 @@ function map (ob, iter) {
   return a
 }
 
+function merge (a, b) {
+  for(var k in b)
+    if(!a[k])
+      a[k] = b[k]
+  return a
+}
+
 var tmpdir = os.tmpdir()
 
 function randDir (pre) {
@@ -61,16 +68,12 @@ var installTree = cont.to(function(tree, opts, cb) {
     //just link it.
     paramap(function (pkg, cb) {
       var target = randDir('npmd-unpack-')
-      unpack.unpack(pkg, {target: target, cache: opts.cache}, function (err, shasum) {
-        if(pkg.shasum && shasum !== pkg.shasum)
-          console.error(
-            'WARN! expected ' 
-          + pkg.name+'@'+pkg.version
-          + ' to have shasum='+shasum
-          )
-        pkg.tmp = path.join(target, 'package')
-        cb(err, pkg)
-      })
+      unpack.unpack(pkg,
+        merge({target: target, cache: opts.cache}, opts),
+        function (err, shasum) {
+          pkg.tmp = path.join(target, 'package')
+          cb(err, pkg)
+        })
     }, 64),
     pull.asyncMap(function (pkg, cb) {
       if(!pkg.tmp)
@@ -80,17 +83,16 @@ var installTree = cont.to(function(tree, opts, cb) {
       var dest   = path.join(pkg.path, pkg.name)
       mkdirp(pkg.path, function () {
         fs.lstat(dest, function (err, stat) {
-          if(stat)
-            fs.rename(dest ,randDir('npmd-gc-') , next)
-          else next()
+          if(stat) fs.rename(dest, randDir('npmd-gc-') , next)
+          else     next()
 
           function next (err) {
             if(err) return cb(err)
             fs.rename(source, dest, function (err) {
-                path.relative(installPath, path.join(pkg.path, pkg.name))
-              if(err) {
-                err.stack = err.message + '\n(mv ' + source + ' ' + dest + ')' + '\n' + err.stack
-              }
+              if(err)
+                err.stack = err.message
+                  + '\n(mv ' + source + ' ' + dest + ')'
+                  + '\n' + err.stack
               cb(err, null)
             })
           }
