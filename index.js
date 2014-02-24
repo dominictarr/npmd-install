@@ -22,6 +22,12 @@ function empty (obj) {
   return true
 }
 
+function emptyStream () {
+  return function (abort, cb) {
+    cb(true)
+  }
+}
+
 function map (ob, iter) {
   if(Array.isArray(ob)) return ob.map(iter)
   var a = {}
@@ -56,6 +62,9 @@ var installTree = cont.to(function(tree, opts, cb) {
 
   pull(
     pt.widthFirst(tree, function (pkg) {
+      if(!pkg.dependencies)
+        return emptyStream()
+      
       return pull(
         pull.values(pkg.dependencies),
         pull.map(function (_pkg) {
