@@ -13,12 +13,12 @@
     "pull-stream": ">=2.20 <3",
     "rimraf": "~2.2.0",
     "pull-paramap": "~1.0.4",
-    "npmd-unpack": "~1.0.6",
+    "npmd-unpack": "~1.0.9",
     "osenv": "0.0.3",
     "continuable": "1.1.6",
     "continuable-hash": "0.1.4",
     "get-deps": "2.0.4",
-    "npmd-config": "~1.0.3",
+    "npmd-config": "~1.0.10",
     "clone": "~0.1.11"
   },
   "devDependencies": {
