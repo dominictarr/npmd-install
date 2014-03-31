@@ -76,7 +76,7 @@ function clean(tree) {
 
 
 
-var inject = module.exports = function (cache) {
+var inject = module.exports = function (cache, config) {
 
   function unpack (pkg, opts, cb) {
     var start = Date.now()
@@ -91,7 +91,7 @@ var inject = module.exports = function (cache) {
     return cache.createStream(query, function (err, stream) {
       if(err) return cb(err)
       if(!stream) throw new Error('did not return stream')
-      var hash = crypto.createHash(opts.alg || 'sha1')
+      var hash = crypto.createHash('sha1')
 
       stream
         .on('data', function (d) { hash.update(d) })
@@ -129,7 +129,7 @@ var inject = module.exports = function (cache) {
         )
       }),
       paramap(function (pkg, cb) {
-        unpack(pkg, {target: pkg.path, alg: config.alg}, function (err, hash) {
+        unpack(pkg, {target: pkg.path}, function (err, hash) {
             if(hash !== pkg.shasum) return cb(new Error(
               'expected ' + pkg.name +'@' + pkg.version +'\n' +
               'to have shasum=' + pkg.shasum + ' but was='+hash))
