@@ -136,6 +136,7 @@ var inject = module.exports = function (cache, config) {
       }),
       paramap(function (pkg, cb) {
         unpack(pkg, {target: pkg.path}, function (err, hash) {
+            if(err) return cb(err)
             if(hash !== pkg.shasum) return cb(new Error(
               'expected ' + pkg.name +'@' + pkg.version +'\n' +
               'to have shasum=' + pkg.shasum + ' but was='+hash))
