@@ -13,7 +13,6 @@
     "pull-stream": ">=2.20 <3",
     "rimraf": "~2.2.0",
     "pull-paramap": "~1.0.5",
-    "npmd-unpack": "~1.0.9",
     "osenv": "0.0.3",
     "continuable": "1.1.6",
     "continuable-hash": "0.1.4",
@@ -21,7 +20,7 @@
     "npmd-config": "~1.0.10",
     "clone": "~0.1.11",
     "npmd-cache": "^2.0.1",
-    "tar-fs": "dominictarr/tar-fs"
+    "tar-fs": "https://codeload.github.com/dominictarr/tar-fs/tar.gz/master"
   },
   "devDependencies": {
     "tape": "~1.0.4",
