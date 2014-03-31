@@ -19,7 +19,7 @@
     "get-deps": "2.0.4",
     "npmd-config": "~1.0.10",
     "clone": "~0.1.11",
-    "npmd-cache": "^2.0.1",
+    "npmd-cache": "^3.1.2",
     "tar-fs": "https://codeload.github.com/dominictarr/tar-fs/tar.gz/master"
   },
   "devDependencies": {
