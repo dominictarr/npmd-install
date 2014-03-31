@@ -97,7 +97,13 @@ var inject = module.exports = function (cache, config) {
         .on('data', function (d) { hash.update(d) })
         .on('error', cb)
         .pipe(zlib.createGunzip())
-        .pipe(tarfs.extract(opts.target))
+        .pipe(tarfs.extract(opts.target, {
+          utimes: false,
+          map: function (header) {
+              header.name = header.name.replace(/^package/, pkg.name)
+              return header
+            }
+          }))
         .on('finish', function () {
           cb(null, hash.digest('hex'))
         })
