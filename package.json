@@ -21,10 +21,11 @@
     "npmd-config": "~1.0.10",
     "clone": "~0.1.11",
     "npmd-cache": "^2.0.1",
-    "tar-fs": "~0.2.2"
+    "tar-fs": "dominictarr/tar-fs"
   },
   "devDependencies": {
-    "tape": "~1.0.4"
+    "tape": "~1.0.4",
+    "osenv": "0.0.3"
   },
   "bin": "./index.js",
   "scripts": {
