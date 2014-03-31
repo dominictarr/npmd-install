@@ -83,8 +83,9 @@ var inject = module.exports = function (cache, config) {
 
     //get from the hash if it's already been downloaded!
     //else download from the registry or the url.
-    var query = {
-      key: /\//.test(pkg.from) ? pkg.from : pkg.name + '@' + pkg.version,
+    var key = /\//.test(pkg.from) ? pkg.from : pkg.name + '@' + pkg.version
+    var query = opts.hash === false ? key : {
+      key: key,
       hash: pkg.shasum
     }
 
@@ -97,10 +98,14 @@ var inject = module.exports = function (cache, config) {
         .on('data', function (d) { hash.update(d) })
         .on('error', cb)
         .pipe(zlib.createGunzip())
+        .on('error', function (err) {
+          err.stack = 'attempting to gunzip: ' + key + '\n' + err.stack
+          return cb(err)
+        })
         .pipe(tarfs.extract(opts.target, {
           utimes: false,
           map: function (header) {
-              header.name = header.name.replace(/^package/, pkg.name)
+              header.name = header.name.replace(/^package\//, '')
               return header
             }
           }))
@@ -129,13 +134,14 @@ var inject = module.exports = function (cache, config) {
         return pull(
           pull.values(pkg.dependencies),
           pull.map(function (_pkg) {
-            _pkg.path = path.join(pkg.path, pkg.name, 'node_modules')
+            _pkg.path = path.join(pkg.path, pkg.name, 'node_modules', _pkg.name)
             return _pkg
           })
         )
       }),
       paramap(function (pkg, cb) {
         unpack(pkg, {target: pkg.path}, function (err, hash) {
+            
             if(err) return cb(err)
             if(hash !== pkg.shasum) return cb(new Error(
               'expected ' + pkg.name +'@' + pkg.version +'\n' +
