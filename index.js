@@ -3,6 +3,7 @@
 var fs      = require('fs')
 var path    = require('path')
 var os      = require('osenv')
+var crypto  = require('crypto')
 
 var mkdirp  = require('mkdirp')
 var pull    = require('pull-stream')
@@ -10,9 +11,41 @@ var pt      = require('pull-traverse')
 var paramap = require('pull-paramap')
 var cont    = require('continuable')
 var cpara   = require('continuable-hash')
-var unpack  = require('npmd-unpack')
+
+//var _unpack  = require('npmd-unpack').unpack
 var deps    = require('get-deps')
 var clone   = require('clone')
+var tarfs   = require('tar-fs')
+var zlib    = require('zlib')
+
+var get = require('npmd-cache')({path: path.join(process.env.HOME, '.npmd')})
+
+function unpack (pkg, opts, cb) {
+  var start = Date.now()
+
+  //get from the hash if it's already been downloaded!
+  //else download from the registry or the url.
+  var query = {
+    key: /\//.test(pkg.from) ? pkg.from : pkg.name + '@' + pkg.version,
+    hash: pkg.shasum
+  }
+
+  return get.createStream(query, function (err, stream) {
+    if(err) return cb(err)
+    if(!stream) throw new Error('did not return stream')
+    var hash = crypto.createHash(opts.alg || 'sha1')
+
+    stream
+      .on('data', function (d) { hash.update(d) })
+      .on('error', cb)
+      .pipe(zlib.createGunzip())
+      .pipe(tarfs.extract(opts.target))
+      .on('finish', function () {
+        cb(null, hash.digest('hex'))
+      })
+  })
+}
+
 
 var EventEmitter = require('events').EventEmitter
 
@@ -73,42 +106,14 @@ var installTree = cont.to(function(tree, opts, cb) {
         })
       )
     }),
-    //unpack every file, so that it can be moved into place.
-    //possibe optimization: if a module has no deps,
-    //just link it.
     paramap(function (pkg, cb) {
-      var target = randDir('npmd-unpack-')
-      unpack.unpack(pkg,
-        merge({target: target, cache: opts.cache}, opts),
-        function (err, shasum) {
-          pkg.tmp = path.join(target, 'package')
+      unpack(pkg, {target: pkg.path, alg: config.alg}, function (err, hash) {
+          if(hash !== pkg.shasum) return cb(new Error(
+            'expected ' + pkg.name +'@' + pkg.version +'\n' +
+            'to have shasum=' + pkg.shasum + ' but was='+hash))
           cb(err, pkg)
-        })
-    }, 64),
-    pull.asyncMap(function (pkg, cb) {
-      if(!pkg.tmp)
-        return cb(new Error('no path for:'+ pkg.name), null)
-
-      var source = pkg.tmp
-      var dest   = path.join(pkg.path, pkg.name)
-      mkdirp(pkg.path, function () {
-        fs.lstat(dest, function (err, stat) {
-          if(stat) fs.rename(dest, randDir('npmd-gc-') , next)
-          else     next()
-
-          function next (err) {
-            if(err) return cb(err)
-            fs.rename(source, dest, function (err) {
-              if(err)
-                err.stack = err.message
-                  + '\n(mv ' + source + ' ' + dest + ')'
-                  + '\n' + err.stack
-              cb(err, null)
-            })
-          }
-        })
       })
-    }),
+    }, 32),
     pull.drain(null, cb)
   )
 
