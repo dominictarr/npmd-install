@@ -124,7 +124,11 @@ var inject = module.exports = function (cache, config) {
 
     var installPath = opts.path || process.cwd()
 
-    tree.path = path.join(installPath, 'node_modules')
+    tree.path = (
+      'string' === typeof tree.name
+      ? path.join(installPath, 'node_modules', tree.name)
+      : path.join(installPath, 'node_modules')
+    )
 
     pull(
       pt.widthFirst(tree, function (pkg) {
@@ -134,7 +138,7 @@ var inject = module.exports = function (cache, config) {
         return pull(
           pull.values(pkg.dependencies),
           pull.map(function (_pkg) {
-            _pkg.path = path.join(pkg.path, pkg.name, 'node_modules', _pkg.name)
+            _pkg.path = path.join(pkg.path, 'node_modules', _pkg.name)
             return _pkg
           })
         )
