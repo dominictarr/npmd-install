@@ -19,7 +19,7 @@
     "get-deps": "2.0.4",
     "npmd-config": "~1.0.10",
     "clone": "~0.1.11",
-    "npmd-cache": "^3.1.2",
+    "npmd-cache": "~4.1.1",
     "tar-fs": "0.3.0"
   },
   "devDependencies": {
