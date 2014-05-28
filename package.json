@@ -24,7 +24,8 @@
   },
   "devDependencies": {
     "tape": "~1.0.4",
-    "osenv": "0.0.3"
+    "osenv": "0.0.3",
+    "level": "~0.18.0"
   },
   "bin": "./index.js",
   "scripts": {
