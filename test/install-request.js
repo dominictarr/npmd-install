@@ -1,4 +1,4 @@
-var install = require('../')
+var install = require('./setup')
 var tape = require('tape')
 var snapshot = require('./request-dep-tree.json')
 var join = require('path').join

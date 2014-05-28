@@ -1,4 +1,6 @@
-var install = require('../')
+
+var install = require('./setup')
+
 var tape = require('tape')
 var join = require('path').join
 
