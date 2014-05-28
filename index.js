@@ -178,8 +178,8 @@ var inject = module.exports = function (cache, config) {
 //process.on is test for !browserify
 if(!module.parent && process.on) {
   var config = require('npmd-config')
-  var cache = require('npmd-cache')(config)
-  var install = inject(cache)
+  var cache = require('npmd-cache')(null, config)
+  var install = inject(cache, config)
 
   if(config.version) {
     console.log(require('./package').version)
