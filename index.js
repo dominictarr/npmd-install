@@ -78,15 +78,21 @@ function clean(tree) {
 
 var inject = module.exports = function (cache, config) {
 
+  var uid = process.getuid() || + process.env.SUDO_UID
+  var gid = process.getgid() || + process.env.SUDO_GID
+
+
   function unpack (pkg, opts, cb) {
     var start = Date.now()
 
     //get from the hash if it's already been downloaded!
     //else download from the registry or the url.
-    var key = /\//.test(pkg.from) ? pkg.from : pkg.name + '@' + pkg.version
-    var query = opts.hash === false ? key : {
+    
+    var key = pkg.name + '@' + pkg.version
+    var query = {
+      name: pkg.name, version: pkg.version,
       key: key,
-      hash: pkg.shasum
+      tarball: pkg.tarball, hash: pkg.shasum
     }
 
     return cache.createStream(query, function (err, stream) {
@@ -105,7 +111,9 @@ var inject = module.exports = function (cache, config) {
         .pipe(tarfs.extract(opts.target, {
           utimes: false,
           map: function (header) {
-              header.name = header.name.replace(/^package\//, '')
+              header.uid = uid
+              header.git = gid
+              header.name = header.name.replace(/^[^\/]*\//, '')
               return header
             }
           }))
@@ -178,7 +186,8 @@ var inject = module.exports = function (cache, config) {
 //process.on is test for !browserify
 if(!module.parent && process.on) {
   var config = require('npmd-config')
-  var cache = require('npmd-cache')(null, config)
+  var db = require('level')(path.join(config.dbPath, 'db'))
+  var cache = require('npmd-cache')(db, config)
   var install = inject(cache, config)
 
   if(config.version) {
