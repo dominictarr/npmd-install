@@ -1,0 +1,84 @@
+{
+  "name": "express",
+  "version": "1.0.0-rc3",
+  "shasum": "ae5ee7dfbe436192adad65c7817c5ae78a8b4f93",
+  "tarball": "http://registry.npmjs.org/express/-/express-1.0.0rc3.tgz",
+  "dependencies": {
+    "connect": {
+      "name": "connect",
+      "version": "3.0.2",
+      "shasum": "1f90b4672fe009fa2876df860442d30db18609a2",
+      "tarball": "http://registry.npmjs.org/connect/-/connect-3.0.2.tgz",
+      "from": ">= 0.2.5",
+      "dependencies": {
+        "debug": {
+          "name": "debug",
+          "version": "1.0.3",
+          "shasum": "fc8c6b2d6002804b4081c0208e0f6460ba1fa3e4",
+          "tarball": "http://registry.npmjs.org/debug/-/debug-1.0.3.tgz",
+          "from": "1.0.3",
+          "dependencies": {
+            "ms": {
+              "name": "ms",
+              "version": "0.6.2",
+              "shasum": "d89c2124c6fdc1353d65a8b77bf1aac4b193708c",
+              "tarball": "http://registry.npmjs.org/ms/-/ms-0.6.2.tgz",
+              "from": "0.6.2",
+              "dependencies": {}
+            }
+          }
+        },
+        "finalhandler": {
+          "name": "finalhandler",
+          "version": "0.0.2",
+          "shasum": "0603d875ee87d567a266692815cc8ad44fcceeda",
+          "tarball": "http://registry.npmjs.org/finalhandler/-/finalhandler-0.0.2.tgz",
+          "from": "0.0.2",
+          "dependencies": {
+            "debug": {
+              "name": "debug",
+              "version": "1.0.2",
+              "shasum": "3849591c10cce648476c3c7c2e2e3416db5963c4",
+              "tarball": "http://registry.npmjs.org/debug/-/debug-1.0.2.tgz",
+              "from": "1.0.2",
+              "dependencies": {
+                "ms": {
+                  "name": "ms",
+                  "version": "0.6.2",
+                  "shasum": "d89c2124c6fdc1353d65a8b77bf1aac4b193708c",
+                  "tarball": "http://registry.npmjs.org/ms/-/ms-0.6.2.tgz",
+                  "from": "0.6.2",
+                  "dependencies": {}
+                }
+              }
+            },
+            "escape-html": {
+              "name": "escape-html",
+              "version": "1.0.1",
+              "shasum": "181a286ead397a39a92857cfb1d43052e356bff0",
+              "tarball": "http://registry.npmjs.org/escape-html/-/escape-html-1.0.1.tgz",
+              "from": "1.0.1",
+              "dependencies": {}
+            }
+          }
+        },
+        "parseurl": {
+          "name": "parseurl",
+          "version": "1.1.3",
+          "shasum": "1f005738ac71b417bc2d0845cbdfa2a8b63ea639",
+          "tarball": "http://registry.npmjs.org/parseurl/-/parseurl-1.1.3.tgz",
+          "from": "~1.1.3",
+          "dependencies": {}
+        },
+        "utils-merge": {
+          "name": "utils-merge",
+          "version": "1.0.0",
+          "shasum": "0294fb922bb9375153541c4f7096231f287c8af8",
+          "tarball": "http://registry.npmjs.org/utils-merge/-/utils-merge-1.0.0.tgz",
+          "from": "1.0.0",
+          "dependencies": {}
+        }
+      }
+    }
+  }
+}
