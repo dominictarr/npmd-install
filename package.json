@@ -20,12 +20,12 @@
     "npmd-config": "~1.0.10",
     "clone": "~0.1.11",
     "npmd-cache": "~4.1.1",
-    "tar-fs": "~0.3.2"
+    "tar-fs": "~0.3.2",
+    "level": "~0.18.0"
   },
   "devDependencies": {
     "tape": "~1.0.4",
-    "osenv": "0.0.3",
-    "level": "~0.18.0"
+    "osenv": "0.0.3"
   },
   "bin": "./index.js",
   "scripts": {
