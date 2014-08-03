@@ -81,7 +81,6 @@ var inject = module.exports = function (cache, config) {
   var uid = process.getuid() || + process.env.SUDO_UID
   var gid = process.getgid() || + process.env.SUDO_GID
 
-
   function unpack (pkg, opts, cb) {
     var start = Date.now()
 
@@ -112,7 +111,7 @@ var inject = module.exports = function (cache, config) {
           utimes: false,
           map: function (header) {
               header.uid = uid
-              header.git = gid
+              header.gid = gid
               header.name = header.name.replace(/^[^\/]*\//, '')
               return header
             }
