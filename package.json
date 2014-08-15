@@ -12,7 +12,7 @@
     "pull-traverse": "~1.0.0",
     "pull-stream": ">=2.20 <3",
     "rimraf": "~2.2.0",
-    "pull-paramap": "~1.0.5",
+    "pull-paramap": "~1.1.0",
     "osenv": "0.0.3",
     "continuable": "1.1.6",
     "continuable-hash": "0.1.4",
