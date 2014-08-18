@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-
+'use strict'
 var fs      = require('fs')
 var path    = require('path')
 var os      = require('osenv')
@@ -86,12 +86,14 @@ var inject = module.exports = function (cache, config) {
 
     //get from the hash if it's already been downloaded!
     //else download from the registry or the url.
-    
-    var key = pkg.name + '@' + pkg.version
+
+    //actually, it's better to use the url as the key
+    //so that the cache downloads the correct tarball.
+    //this would all be so much simpler if npm just
+    //used the hashes as the name of the tarball.
+
     var query = {
-      name: pkg.name, version: pkg.version,
-      key: key,
-      tarball: pkg.tarball, hash: pkg.shasum
+      key: pkg.tarball, hash: pkg.shasum
     }
 
     return cache.createStream(query, function (err, stream) {
