@@ -92,8 +92,13 @@ var inject = module.exports = function (cache, config) {
     //this would all be so much simpler if npm just
     //used the hashes as the name of the tarball.
 
+    var key =
+      pkg.tarball          ? pkg.tarball
+    : /[/]/.test(pkg.from) ? pkg.from
+    :                        (pkg.name+'@'+pkg.version)
+
     var query = {
-      key: pkg.tarball, hash: pkg.shasum
+      key: key, hash: pkg.shasum
     }
 
     return cache.createStream(query, function (err, stream) {
