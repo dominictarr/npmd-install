@@ -77,9 +77,11 @@ function clean(tree) {
 
 
 var inject = module.exports = function (cache, config) {
-
-  var uid = process.getuid() || + process.env.SUDO_UID
-  var gid = process.getgid() || + process.env.SUDO_GID
+  
+  // Check if running in a posix environment. Don't fetch uid and gid if it isn't
+  var isposix = !!(process.getuid)
+  var uid = isposix ? process.getuid() || + process.env.SUDO_UID : undefined
+  var gid = isposix ? process.getgid() || + process.env.SUDO_GID : undefined
 
   function unpack (pkg, opts, cb) {
     var start = Date.now()
@@ -112,8 +114,11 @@ var inject = module.exports = function (cache, config) {
         .pipe(tarfs.extract(opts.target, {
           utimes: false,
           map: function (header) {
-              header.uid = uid
-              header.gid = gid
+              // If in a posix environment preserve uid and gid in headers
+              if(isposix){
+                header.uid = uid
+                header.gid = gid
+              }
               header.name = header.name.replace(/^[^\/]*\//, '')
               return header
             }
