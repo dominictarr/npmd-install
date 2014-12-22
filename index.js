@@ -75,11 +75,21 @@ function clean(tree) {
 }
 
 
+function isFunction (f) {
+  return 'function' === typeof f
+}
+
 
 var inject = module.exports = function (cache, config) {
 
-  var uid = process.getuid() || + process.env.SUDO_UID
-  var gid = process.getgid() || + process.env.SUDO_GID
+  var uid, gid
+
+  var hasId = isFunction(process.getuid)
+
+  if(hasId) {
+    uid = process.getuid() || + process.env.SUDO_UID
+    gid = process.getgid() || + process.env.SUDO_GID
+  }
 
   function unpack (pkg, opts, cb) {
     var start = Date.now()
@@ -117,8 +127,7 @@ var inject = module.exports = function (cache, config) {
         .pipe(tarfs.extract(opts.target, {
           utimes: false,
           map: function (header) {
-              header.uid = uid
-              header.gid = gid
+              if(hasId) { header.uid = uid; header.gid = gid }
               header.name = header.name.replace(/^[^\/]*\//, '')
               return header
             }
